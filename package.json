@@ -1,0 +1,13 @@
+{
+  "name": "el-reno-spring-classic",
+  "version": "1.0.0",
+  "private": true,
+  "description": "2027 El Reno Spring Classic match day schedule site",
+  "scripts": {
+    "start": "node server.js",
+    "build": "node -e \"console.log('No build step needed. Static files are ready.')\""
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
