@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin | 2027 El Reno Spring Classic</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="favicon.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="admin-body">
+
+<!-- password gate -->
+<div class="modal open" id="gate">
+  <div class="modal-card">
+    <h2>Admin Access</h2>
+    <p>Enter the admin password to manage the schedule.</p>
+    <div class="form-row">
+      <label for="gatePass">Password</label>
+      <input type="password" id="gatePass" placeholder="Password" autocomplete="current-password">
+    </div>
+    <div id="gateErr" style="color:var(--red);font-size:13px;margin-bottom:12px;display:none">Incorrect password.</div>
+    <div style="display:flex;gap:9px;justify-content:flex-end">
+      <a class="btn" href="index.html">View site</a>
+      <button class="btn primary" id="gateBtn">Unlock</button>
+    </div>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+
+  <div class="admin-bar no-print">
+    <div class="wrap">
+      <div class="logo"><img src="crest-sm.png" alt="" class="admin-crest">Scheduler <span>· Admin</span></div>
+      <div class="tabs">
+        <button data-tab="schedule" class="on">Schedule</button>
+        <button data-tab="teams">Teams</button>
+        <button data-tab="officials">Officials</button>
+        <button data-tab="print">Print</button>
+        <button data-tab="settings">Settings</button>
+        <button data-tab="publish">Publish</button>
+      </div>
+      <a class="btn ghost sm" href="index.html" target="_blank" style="margin-left:14px">View site ↗</a>
+    </div>
+  </div>
+
+  <main style="padding:18px 0 60px">
+    <div class="wrap">
+
+      <!-- ============ SCHEDULE ============ -->
+      <section class="tabpane on" id="pane-schedule">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Drag &amp; Drop Board</h2>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn sm" id="btnAddGame">+ Add match</button>
+              <button class="btn sm" id="btnAutoNum">Auto-number</button>
+              <button class="btn sm" id="btnUndo">↶ Undo</button>
+            </div>
+          </div>
+          <div class="panel-body" style="padding:12px 14px">
+            <p class="hint" style="margin:0 0 10px">
+              Drag a match to any open slot to move it. Drop it on an occupied slot to swap the two.
+              Drag a team name from the pool onto a team slot to change a matchup. Click any match to edit it.
+            </p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
+              <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Show</span>
+              <div class="seg" id="boardDiv">
+                <button data-d="" class="on">All</button>
+                <button data-d="G">Girls</button>
+                <button data-d="B">Boys</button>
+              </div>
+            </div>
+            <div class="board-scroll">
+              <table class="board" id="board"></table>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Unscheduled Matches</h2>
+            <span class="hint">Drag these onto the board</span>
+          </div>
+          <div class="panel-body">
+            <div class="tray" id="tray"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h2>Team Pool</h2><span class="hint">Drag onto a matchup to assign</span></div>
+          <div class="panel-body" id="teamPool"></div>
+        </div>
+      </section>
+
+      <!-- ============ TEAMS ============ -->
+      <section class="tabpane" id="pane-teams">
+        <div class="panel">
+          <div class="panel-head"><h2>Team Rosters</h2>
+            <span class="hint">Girls and boys are separate divisions. One team per line in each box.</span></div>
+          <div class="panel-body">
+            <div class="form-2" style="gap:20px">
+              <div>
+                <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--pink)">Girls teams <span id="girlsCount" style="font-weight:600;letter-spacing:0;text-transform:none;color:var(--muted)"></span></label>
+                <textarea id="taGirls" rows="12" style="width:100%;font-family:inherit;font-size:14px;padding:10px;border:1px solid var(--line);border-radius:3px;margin-top:6px"></textarea>
+              </div>
+              <div>
+                <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--blue)">Boys teams <span id="boysCount" style="font-weight:600;letter-spacing:0;text-transform:none;color:var(--muted)"></span></label>
+                <textarea id="taBoys" rows="12" style="width:100%;font-family:inherit;font-size:14px;padding:10px;border:1px solid var(--line);border-radius:3px;margin-top:6px"></textarea>
+              </div>
+            </div>
+            <div style="margin-top:14px"><button class="btn primary" id="btnSaveTeams">Save rosters</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PRINT ============ -->
+      <section class="tabpane" id="pane-print">
+        <div class="panel">
+          <div class="panel-head"><h2>Print Schedules</h2></div>
+          <div class="panel-body">
+            <p class="hint" style="margin:0 0 14px">Each printout includes game numbers for officials' payments.</p>
+            <div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:10px">
+              <button class="btn primary" data-print="all">🖨 Full schedule</button>
+              <button class="btn" data-print="G">🖨 Girls schedule</button>
+              <button class="btn" data-print="B">🖨 Boys schedule</button>
+            </div>
+            <div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px">
+              <button class="btn" data-print="f1">🖨 Field 1 only</button>
+              <button class="btn" data-print="f2">🖨 Field 2 only</button>
+              <button class="btn" data-print="f3">🖨 Field 3 only</button>
+            </div>
+            <p class="hint" style="margin:0 0 8px">Board grid prints the time and field layout exactly like the public schedule page.</p>
+            <div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px">
+              <button class="btn" data-pgrid="all">🖨 Grid, all matches</button>
+              <button class="btn" data-pgrid="G">🖨 Grid, girls</button>
+              <button class="btn" data-pgrid="B">🖨 Grid, boys</button>
+              <button class="btn" data-pgrid="f1">🖨 Grid Field 1</button>
+              <button class="btn" data-pgrid="f2">🖨 Grid Field 2</button>
+              <button class="btn" data-pgrid="f3">🖨 Grid Field 3</button>
+            </div>
+            <div class="form-2" style="max-width:640px">
+              <div class="field">
+                <label for="prTeam">Print a single team's schedule</label>
+                <select id="prTeam"><option value="">Choose a team…</option></select>
+              </div>
+              <div class="field">
+                <label>&nbsp;</label>
+                <button class="btn" id="btnPrintTeam">🖨 Team schedule</button>
+              </div>
+            </div>
+            <hr style="border:0;border-top:1px solid var(--line);margin:22px 0">
+            <h3 style="font-size:14px;margin-bottom:10px">Officials' payment sheet</h3>
+            <p class="hint" style="margin:0 0 12px">Game numbers, fields, and times, one row per match.</p>
+            <div class="form-2" style="max-width:640px">
+              <div class="field">
+                <label for="prRate">Pay per game ($)</label>
+                <input type="number" id="prRate" value="0" min="0" step="1">
+              </div>
+              <div class="field">
+                <label>&nbsp;</label>
+                <button class="btn" id="btnPrintPay">🖨 Payment sheet</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ OFFICIALS ============ -->
+      <section class="tabpane" id="pane-officials">
+
+        <div class="panel">
+          <div class="panel-head"><h2>Import game numbers</h2></div>
+          <div class="panel-body">
+            <p class="hint" style="margin:0 0 10px">
+              Paste the list you downloaded from the assigning site. One game per line.
+              A line can be just the number, or the number plus the two officials,
+              separated by commas or tabs.
+            </p>
+            <textarea id="taGno" rows="7" class="mono-area" placeholder="10432&#10;10433, Jane Smith, Mark Ruiz&#10;10434&#9;Alex Kim&#9;Sam Ortiz"></textarea>
+            <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:10px">
+              <button class="btn primary" id="btnAssignGno">Assign in schedule order</button>
+              <button class="btn" id="btnClearGno">Clear all numbers</button>
+            </div>
+            <p class="hint" id="gnoStat" style="margin:10px 0 0"></p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h2>Officials by game</h2><span class="hint">Edits save as you type</span></div>
+          <div class="panel-body" style="padding:0">
+            <div class="board-scroll" style="max-height:none">
+              <table class="board off-table" id="offTable"></table>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h2>Print payment sheet</h2></div>
+          <div class="panel-body">
+            <div class="form-2" style="max-width:640px">
+              <div class="field">
+                <label for="prRate2">Pay per game ($)</label>
+                <input type="number" id="prRate2" value="0" min="0" step="1">
+              </div>
+              <div class="field">
+                <label>&nbsp;</label>
+                <button class="btn primary" id="btnPrintPay2">🖨 Payment sheet</button>
+              </div>
+            </div>
+            <p class="hint" style="margin:10px 0 0">Includes the official game number and both officials for every match.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SETTINGS ============ -->
+      <section class="tabpane" id="pane-settings">
+        <div class="panel">
+          <div class="panel-head"><h2>Event Details</h2></div>
+          <div class="panel-body">
+            <div class="form-2">
+              <div class="form-row"><label>Event title</label><input type="text" id="stTitle"></div>
+              <div class="form-row"><label>Subtitle</label><input type="text" id="stSub"></div>
+              <div class="form-row"><label>Date</label><input type="text" id="stDate"></div>
+              <div class="form-row"><label>Venue</label><input type="text" id="stVenue"></div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Fields</h2></div>
+          <div class="panel-body">
+            <div id="fieldList"></div>
+            <button class="btn sm" id="btnAddField" style="margin-top:10px">+ Add field</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Time Slots</h2></div>
+          <div class="panel-body">
+            <p class="hint" style="margin:0 0 10px">One per line, in order.</p>
+            <textarea id="taTimes" rows="13" style="width:100%;max-width:320px;font-family:inherit;font-size:14px;padding:10px;border:1px solid var(--line);border-radius:3px"></textarea>
+            <div style="margin-top:10px"><button class="btn sm" id="btnSaveTimes">Save time slots</button></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Admin Password</h2></div>
+          <div class="panel-body">
+            <p class="hint" style="margin:0 0 10px">Stored in this browser only. It keeps casual visitors out of the editor, but it is not server-side security.</p>
+            <div class="form-2" style="max-width:520px">
+              <div class="form-row"><label>New password</label><input type="password" id="stPass"></div>
+              <div class="form-row"><label>&nbsp;</label><button class="btn" id="btnSavePass">Update password</button></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PUBLISH ============ -->
+      <section class="tabpane" id="pane-publish">
+
+        <div class="panel pub-hero">
+          <div class="panel-head"><h2>Publish to the live site</h2></div>
+          <div class="panel-body">
+            <p class="pub-lead">This is how you push your edits out to everyone.</p>
+            <div class="pub-steps">
+              <div class="pub-step">
+                <span class="pub-n">1</span>
+                <div><b>Click the button below.</b><br>
+                  <span class="hint">It downloads a file called <code>published-data.js</code> containing your current schedule.</span></div>
+              </div>
+              <div class="pub-step">
+                <span class="pub-n">2</span>
+                <div><b>Attach that file in the chat.</b><br>
+                  <span class="hint">Say "publish" and it goes live for every team within a minute.</span></div>
+              </div>
+            </div>
+            <button class="btn primary pub-btn" id="btnPublishFile">⬇ Download publish file</button>
+            <p class="hint" style="margin:12px 0 0" id="pubStat"></p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h2>Instant share link</h2></div>
+          <div class="panel-body">
+            <p class="hint" style="margin:0 0 14px">
+              No upload needed. The entire schedule is packed into the link itself, so anyone who opens it
+              sees exactly what you see right now, on any phone or computer. Great for a quick text or email
+              before the day of the event.
+            </p>
+            <div style="display:flex;gap:9px;flex-wrap:wrap">
+              <button class="btn" id="btnGenLink">Generate share link</button>
+              <button class="btn" id="btnGenLinkG">Girls-only link</button>
+              <button class="btn" id="btnGenLinkB">Boys-only link</button>
+            </div>
+            <p class="hint" style="margin:10px 0 0">
+              Division links open the public site already filtered to girls or boys, handy when the two divisions have different coaches.
+            </p>
+            <div id="linkBox" style="display:none;margin-top:16px">
+              <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Share this link</label>
+              <div style="display:flex;gap:8px;margin-top:6px">
+                <input type="text" id="shareLink" readonly style="flex:1">
+                <button class="btn" id="btnCopy">Copy</button>
+                <a class="btn" id="btnOpenLink" target="_blank">Open</a>
+              </div>
+              <p class="hint" style="margin-top:8px" id="linkLen"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h2>Backup</h2></div>
+          <div class="panel-body">
+            <div style="display:flex;gap:9px;flex-wrap:wrap">
+              <button class="btn" id="btnExport">⬇ Download JSON backup</button>
+              <button class="btn" id="btnImport">⬆ Import JSON</button>
+              <input type="file" id="fileImport" accept="application/json" style="display:none">
+              <button class="btn danger" id="btnResetAll">Reset to original</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- drawer -->
+  <div class="drawer" id="drawer">
+    <div class="drawer-head">
+      <h3 style="font-size:15px">Edit Match</h3>
+      <button class="close-x" id="drawerClose">×</button>
+    </div>
+    <div class="drawer-body">
+      <div class="form-row">
+        <label>Board order number <span style="text-transform:none;letter-spacing:0;font-weight:500">(admin only)</span></label>
+        <input type="number" id="edNum" min="0" step="1" placeholder="e.g. 12">
+      </div>
+      <div class="form-row">
+        <label>Official game # <span style="text-transform:none;letter-spacing:0;font-weight:500">(from the assigning site)</span></label>
+        <input type="text" id="edGno" placeholder="e.g. 10432">
+      </div>
+      <div class="form-2">
+        <div class="form-row"><label>Official 1</label><input type="text" id="edO1" placeholder="Name"></div>
+        <div class="form-row"><label>Official 2</label><input type="text" id="edO2" placeholder="Name"></div>
+      </div>
+      <div class="form-row">
+        <label>Division</label>
+        <select id="edGender"><option value="G">Girls</option><option value="B">Boys</option></select>
+      </div>
+      <div class="form-2">
+        <div class="form-row"><label>Team A</label><select id="edA"></select></div>
+        <div class="form-row"><label>Team B</label><select id="edB"></select></div>
+      </div>
+      <div class="form-2">
+        <div class="form-row"><label>Field</label><select id="edField"></select></div>
+        <div class="form-row"><label>Time</label><select id="edTime"></select></div>
+      </div>
+      <div class="form-row">
+        <label>Note (optional)</label>
+        <input type="text" id="edNote" placeholder="e.g. officials confirmed">
+      </div>
+    </div>
+    <div class="drawer-foot">
+      <button class="btn danger" id="edDelete">Delete</button>
+      <button class="btn" id="edCancel">Cancel</button>
+      <button class="btn primary" id="edSave">Save</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <div id="print-area"></div>
+
+</div>
+
+<script src="published-data.js"></script>
+<script src="schedule-data.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

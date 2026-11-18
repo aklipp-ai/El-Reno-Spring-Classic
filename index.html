@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2027 El Reno Spring Classic | Match Day Schedule</title>
+<meta name="description" content="2027 El Reno Spring Classic. Full match day schedule. Filter by team to see your games and field locations.">
+<link rel="icon" href="favicon.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header no-print">
+  <div class="wrap">
+    <div class="brand">
+      <div class="crest"><img src="crest.png" alt="El Reno Brahmans crest"></div>
+      <div>
+        <h1 id="evTitle">El Reno High School Soccer</h1>
+        <div class="tagline" id="evSub">Match Day Schedule</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn ghost" id="btnPrint">🖨 Print list</button>
+      <button class="btn ghost" id="btnPrintGrid">🖨 Print grid</button>
+      <a class="btn ghost" href="admin.html">Admin</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <!-- division switcher -->
+    <section class="divbar no-print" id="divBar">
+      <div class="divbar-main">
+        <div class="seg divseg" id="divSeg">
+          <button data-d="" class="on">All divisions</button>
+          <button data-d="G" class="gbtn">Girls</button>
+          <button data-d="B" class="bbtn">Boys</button>
+        </div>
+        <span class="divnote" id="divNote"></span>
+      </div>
+      <div class="divbar-print">
+        <button class="btn sm" id="btnPrintG">🖨 Girls schedule</button>
+        <button class="btn sm" id="btnPrintB">🖨 Boys schedule</button>
+      </div>
+    </section>
+
+    <!-- filters -->
+    <section class="panel no-print">
+      <div class="panel-body">
+        <div class="filters">
+          <div class="field">
+            <label for="fTeam">Find your team</label>
+            <select id="fTeam"><option value="">All teams (show everything)</option></select>
+          </div>
+          <div class="field">
+            <label for="fField">Field / location</label>
+            <select id="fField"><option value="">All fields</option></select>
+          </div>
+          <div class="field">
+            <label for="fSearch">Search</label>
+            <input type="text" id="fSearch" placeholder="Team or opponent…">
+          </div>
+          <div class="field">
+            <label>&nbsp;</label>
+            <button class="btn" id="btnReset">Reset</button>
+          </div>
+        </div>
+      </div>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--pink)"></i> Girls matchup</span>
+        <span><i class="sw" style="background:var(--blue)"></i> Boys matchup</span>
+        <span id="countLabel">30 matches</span>
+      </div>
+    </section>
+
+    <!-- team banner -->
+    <div class="team-banner no-print" id="teamBanner">
+      <div>
+        <div class="tb-name" id="tbName"></div>
+        <div class="tb-meta" id="tbMeta"></div>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn sm primary" id="btnOnlyMine">Show only my games</button>
+      <button class="btn sm" id="btnPrintTeam">🖨 Print my schedule</button>
+    </div>
+
+    <!-- view toggle -->
+    <div class="no-print" style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
+      <div class="seg" id="viewSeg">
+        <button data-v="grid" class="on">By time &amp; field</button>
+        <button data-v="list">List</button>
+        <button data-v="team">By team</button>
+      </div>
+      <span class="hint" id="viewHint"></span>
+    </div>
+
+    <!-- grid view -->
+    <section class="panel" id="viewGrid">
+      <div class="panel-head no-print">
+        <h2>Full Schedule</h2>
+        <span class="hint">Times are start times. Each match runs one hour.</span>
+      </div>
+      <div class="grid-scroll">
+        <table class="grid" id="gridTable"></table>
+      </div>
+    </section>
+
+    <!-- list view -->
+    <section class="panel" id="viewList" style="display:none">
+      <div class="panel-head no-print"><h2>Match List</h2></div>
+      <div class="panel-body" style="padding-top:8px">
+        <div class="list" id="listBody"></div>
+      </div>
+    </section>
+
+    <!-- team view -->
+    <section class="panel" id="viewTeam" style="display:none">
+      <div class="panel-head no-print"><h2>Every Team's Three Opponents</h2></div>
+      <div class="panel-body">
+        <div class="teamgrid" id="teamBody"></div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer class="no-print" style="padding:0 0 40px">
+  <div class="wrap footer-inner">
+    <img src="crest-sm.png" alt="" class="footer-crest">
+    <div>
+      <span id="evVenue"></span> · Schedule subject to change
+    </div>
+  </div>
+</footer>
+
+<div id="print-area"></div>
+
+<script src="published-data.js"></script>
+<script src="schedule-data.js"></script>
+<script src="public.js"></script>
+</body>
+</html>
