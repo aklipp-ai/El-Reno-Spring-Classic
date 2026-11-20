@@ -331,9 +331,13 @@ table.board td.tcell{background:var(--card-2);font-weight:700;font-size:12.5px;c
 /* ---------- print ---------- */
 #print-area{display:none}
 @media print{
-  body{background:#fff;font-size:11pt}
+  body{background:#fff;color:#15142b;font-size:11pt}
   .no-print,.site-header,.admin-bar,.drawer,.modal,.toast,main{display:none!important}
-  #print-area{display:block!important}
+  #print-area{display:block!important;color:#15142b}
+  /* the screen theme is dark, so every printed surface needs its own ink */
+  #print-area,#print-area p,#print-area div,#print-area span,#print-area td,#print-area li{color:#15142b}
+  #print-area .ph-t,#print-area .p-num,#print-area .p-g,#print-area .p-off-name{color:#262161}
+  #print-area .ph-s,#print-area .p-foot{color:#555}
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .print-head{border-bottom:2.5pt solid #262161;padding-bottom:9pt;margin-bottom:16pt;display:flex;align-items:center;gap:32pt}
   .print-head img{height:48pt;width:auto;flex:0 0 auto;margin-right:4pt}
@@ -344,7 +348,7 @@ table.board td.tcell{background:var(--card-2);font-weight:700;font-size:12.5px;c
   .p-head .p-sub{font-size:10pt;color:#555;margin-top:3pt}
   table.p-table{width:100%;border-collapse:collapse;font-size:10.5pt}
   table.p-table th{background:#262161;color:#fff;text-align:left;padding:5pt 7pt;font-size:9.5pt}
-  table.p-table td{border-bottom:.6pt solid #ccd6e0;padding:5pt 7pt}
+  table.p-table td{border-bottom:.6pt solid #ccd6e0;padding:5pt 7pt;color:#15142b}
   table.p-table tr:nth-child(even) td{background:#f6f5fc}
   .p-num{font-weight:700;color:#262161;width:42pt}
   .p-g{font-weight:700;width:34pt}
