@@ -54,7 +54,27 @@ Do not set both up for the same repository. Pick one route and use it.
 
 ## Admin password
 
-The default is `elreno`. You can change it in the admin under **Settings**. The password is stored in the browser, not on the server, so it keeps casual visitors out of the editor but it is not server side security. If you change it, the change applies only to the browser where you made it.
+The default password lives in one place: the `DEFAULT_PASS` constant near the top of `schedule-data.js`.
+
+```js
+const DEFAULT_PASS = 'elreno';
+```
+
+Change that line and commit, and every browser that has not set its own password will use the new one. This is the way to change the password for everyone.
+
+You can also change it in the admin under **Settings**, but that only writes to the browser you are sitting in. It does not travel with the files. If you set a password in Settings and later deploy, other browsers still fall back to `DEFAULT_PASS`. Use the Settings box for a quick local change and edit `DEFAULT_PASS` when you want it to stick for the whole site.
+
+Either way, this is a front door lock, not real security. The password is checked in the browser, so a determined person can read the files. It keeps casual visitors out of the editor, which is all it is meant to do.
+
+## Restoring from a backup
+
+The admin Publish tab can download a full JSON backup of the schedule. To restore one, replace `published-data.js` with a file that wraps it:
+
+```js
+window.PUBLISHED_DATA = { ...the JSON contents... };
+```
+
+The current `published-data.js` in this folder is already in that shape, so you can copy its first few lines and paste your JSON under them. `schedule-data.js` holds the same schedule as `DEFAULT_DATA`, which is the fallback when no published file has loaded. Keep the two in step if you edit by hand.
 
 ## Updating the schedule
 

@@ -458,6 +458,14 @@ const DEFAULT_DATA = {
 };
 
 /* ================= shared helpers ================= */
+
+/* ------------------------------------------------------------
+   ADMIN PASSWORD
+   Change this one line to change the admin password everywhere.
+   This is the default for any browser that has not set its own.
+   ------------------------------------------------------------ */
+const DEFAULT_PASS = 'elreno';
+
 const SD = (function(){
   const KEY_DRAFT = 'er_soccer_draft_v3';
   const KEY_PUB   = 'er_soccer_published_v3';
@@ -518,7 +526,7 @@ const SD = (function(){
   function publish(d){
     localStorage.setItem(KEY_PUB, JSON.stringify(d));
   }
-  function getPass(){ return localStorage.getItem(KEY_PASS) || 'elreno'; }
+  function getPass(){ return localStorage.getItem(KEY_PASS) || DEFAULT_PASS; }
   function setPass(p){ localStorage.setItem(KEY_PASS, p); }
 
   /* public page data source: shared link > published > default */

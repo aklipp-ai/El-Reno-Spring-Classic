@@ -1,6 +1,6 @@
 /* ============================================================
    2027 El Reno Spring Classic - LIVE PUBLISHED SCHEDULE
-   Published: 11/17/2026, 12:57:19 PM
+   Published: 11/20/2026, 4:56:11 PM
    ------------------------------------------------------------
    This file is what the public site actually shows.
    Replace the existing published-data.js with this file.
