@@ -634,7 +634,7 @@
     const games = officialRows();
     let html = '<thead><tr>'
       + '<th class="c-num">Board #</th>'
-      + '<th class="c-gno">Official Game #</th>'
+      + '<th class="c-gno">Arbiter #</th>'
       + '<th class="c-time">Time</th>'
       + '<th class="c-field">Field</th>'
       + '<th class="c-div">Div</th>'
@@ -670,6 +670,7 @@
     });
 
     updateGnoStat();
+    renderOffPayList();
   }
 
   function updateGnoStat(){
@@ -753,6 +754,116 @@
   $('#btnPrintPay2').addEventListener('click', ()=>{
     paySheet(parseFloat($('#prRate2').value)||0);
   });
+
+  /* ---------------- individual official pay sheets ---------------- */
+
+  // Group every scheduled match by official name. A name can appear in the
+  // Official 1 or Official 2 column, and the same person can work many games.
+  function officialIndex(){
+    const games = officialRows();
+    const map = new Map();
+    games.forEach(g=>{
+      [g.o1, g.o2].forEach(raw=>{
+        const name = (raw||'').trim().replace(/\s+/g,' ');
+        if(!name) return;
+        const key = name.toLowerCase();
+        if(!map.has(key)) map.set(key, {key:key, name:name, games:[]});
+        const rec = map.get(key);
+        if(rec.games.indexOf(g) === -1) rec.games.push(g);
+      });
+    });
+    return Array.from(map.values()).sort((a,b)=>a.name.localeCompare(b.name));
+  }
+
+  function offPayRate(){
+    const el = $('#prRate3');
+    const v = el ? parseFloat(el.value) : 50;
+    return isNaN(v) ? 0 : v;
+  }
+
+  function renderOffPayList(){
+    const box = $('#offPayList');
+    if(!box) return;
+    const list = officialIndex();
+    const rate = offPayRate();
+    if(!list.length){
+      box.innerHTML = '<p class="hint" style="margin:14px 0 0">No official names yet. Type names into the Official 1 and Official 2 columns above and they will appear here.</p>';
+      return;
+    }
+    let html = '<table class="off-pay-table"><thead><tr>'
+      + '<th>Official</th><th class="op-c">Matches</th><th>Arbiter numbers</th>'
+      + '<th class="op-r">Total</th><th></th>'
+      + '</tr></thead><tbody>';
+    list.forEach(o=>{
+      const nums = o.games.map(g=>g.gno).filter(Boolean);
+      const money = rate ? '$' + (rate * o.games.length).toFixed(2) : '-';
+      html += '<tr>'
+        + '<td class="op-name">' + esc(o.name) + '</td>'
+        + '<td class="op-c">' + o.games.length + '</td>'
+        + '<td class="op-nums">' + (nums.length ? esc(nums.join(', ')) : '<span class="op-warn">no numbers yet</span>') + '</td>'
+        + '<td class="op-r">' + money + '</td>'
+        + '<td class="op-r"><button class="btn sm" data-print-off="' + esc(o.key) + '">Print sheet</button></td>'
+        + '</tr>';
+    });
+    html += '</tbody></table>';
+    box.innerHTML = html;
+    box.querySelectorAll('[data-print-off]').forEach(btn=>{
+      btn.addEventListener('click', ()=> printOfficialSheets([btn.dataset.printOff], offPayRate()));
+    });
+  }
+
+  // Build one printable page for a single official.
+  function officialSheetHtml(o, rate, addBreak){
+    const n = o.games.length;
+    const total = rate * n;
+    const rows = o.games.map(g=>'<tr>'
+      + '<td class="p-gno">' + esc(g.gno || '-') + '</td>'
+      + '<td>' + esc(g.time||'') + '</td>'
+      + '<td>' + esc(SD.fieldName(D, g.field)) + '</td>'
+      + '<td>' + (g.gender==='G' ? 'Girls' : 'Boys') + '</td>'
+      + '<td>' + esc(g.a) + ' vs ' + esc(g.b) + '</td>'
+      + '<td style="text-align:right">' + (rate ? '$' + rate.toFixed(2) : '') + '</td>'
+      + '</tr>').join('');
+    const missing = o.games.filter(g=>!g.gno).length;
+    return '<div class="p-sheet' + (addBreak ? ' p-break' : '') + '">'
+      + '<div class="print-head"><img src="crest.png" alt=""><div>'
+      + '<div class="ph-t">Official Pay Sheet</div>'
+      + '<div class="ph-s">' + esc(D.event.title) + ' \u00b7 ' + esc(D.event.date||'') + ' \u00b7 ' + esc(D.event.venue||'') + '</div>'
+      + '</div></div>'
+      + '<div class="p-off-name">' + esc(o.name) + '</div>'
+      + '<table class="p-table"><thead><tr>'
+      + '<th>Arbiter #</th><th>Time</th><th>Field</th><th>Div</th><th>Matchup</th>'
+      + '<th style="text-align:right">Fee</th>'
+      + '</tr></thead><tbody>' + rows + '</tbody></table>'
+      + '<table class="p-sum"><tbody>'
+      + '<tr><td>Matches worked</td><td class="p-sum-v">' + n + '</td></tr>'
+      + '<tr><td>Rate per game</td><td class="p-sum-v">' + (rate ? '$' + rate.toFixed(2) : '-') + '</td></tr>'
+      + '<tr class="p-sum-total"><td>Total due</td><td class="p-sum-v">' + (rate ? '$' + total.toFixed(2) : '-') + '</td></tr>'
+      + '</tbody></table>'
+      + '<div class="p-sign"><div class="p-sign-line"></div><div class="p-sign-lbl">Official signature</div></div>'
+      + '<div class="p-foot">Arbiter numbers come from the Arbiter Sports assigning app. '
+      + (missing ? missing + ' match' + (missing===1?'':'es') + ' on this sheet still need a number.' : 'All matches on this sheet have a number.')
+      + '</div></div>';
+  }
+
+  function printOfficialSheets(keys, rate){
+    const list = officialIndex();
+    let chosen = list;
+    if(keys && keys.length) chosen = list.filter(o=>keys.indexOf(o.key) > -1);
+    if(!chosen.length){ toast('No officials to print'); return; }
+    $('#print-area').innerHTML = chosen.map((o,i)=> officialSheetHtml(o, rate, i>0)).join('');
+    window.print();
+  }
+
+  $('#btnPrintAllOff').addEventListener('click', ()=>{
+    printOfficialSheets(null, offPayRate());
+  });
+
+  const rateBox = $('#prRate3');
+  if(rateBox){
+    rateBox.addEventListener('input', renderOffPayList);
+    rateBox.addEventListener('change', renderOffPayList);
+  }
 
   /* ---------------- render all ---------------- */
   function renderAll(){

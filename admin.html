@@ -155,7 +155,7 @@
             <div class="form-2" style="max-width:640px">
               <div class="field">
                 <label for="prRate">Pay per game ($)</label>
-                <input type="number" id="prRate" value="0" min="0" step="1">
+                <input type="number" id="prRate" value="50" min="0" step="1">
               </div>
               <div class="field">
                 <label>&nbsp;</label>
@@ -174,7 +174,7 @@
           <div class="panel-body">
             <p class="hint" style="margin:0 0 10px">
               Paste the list you downloaded from the assigning site. One game per line.
-              A line can be just the number, or the number plus the two officials,
+              A line can be just the Arbiter number, or the number plus the two officials,
               separated by commas or tabs.
             </p>
             <textarea id="taGno" rows="7" class="mono-area" placeholder="10432&#10;10433, Jane Smith, Mark Ruiz&#10;10434&#9;Alex Kim&#9;Sam Ortiz"></textarea>
@@ -201,14 +201,36 @@
             <div class="form-2" style="max-width:640px">
               <div class="field">
                 <label for="prRate2">Pay per game ($)</label>
-                <input type="number" id="prRate2" value="0" min="0" step="1">
+                <input type="number" id="prRate2" value="50" min="0" step="1">
               </div>
               <div class="field">
                 <label>&nbsp;</label>
                 <button class="btn primary" id="btnPrintPay2">🖨 Payment sheet</button>
               </div>
             </div>
-            <p class="hint" style="margin:10px 0 0">Includes the official game number and both officials for every match.</p>
+            <p class="hint" style="margin:10px 0 0">One row per match with the Arbiter number and both officials. This is the master sheet for the whole day.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h2>Individual official pay sheets</h2><span class="hint">One sheet per official</span></div>
+          <div class="panel-body">
+            <div class="form-2" style="max-width:700px">
+              <div class="field">
+                <label for="prRate3">Pay per game ($)</label>
+                <input type="number" id="prRate3" value="50" min="0" step="1">
+              </div>
+              <div class="field">
+                <label>&nbsp;</label>
+                <button class="btn primary" id="btnPrintAllOff">🖨 Print all official sheets</button>
+              </div>
+            </div>
+            <p class="hint" style="margin:10px 0 0">
+              Each official is paid the rate for every match they worked. Names are pulled from the
+              Official 1 and Official 2 columns above, so spell a name the same way each time to keep
+              it on one sheet. Every sheet lists that official's Arbiter numbers and the money total.
+            </p>
+            <div id="offPayList" class="off-pay-list"></div>
           </div>
         </div>
       </section>

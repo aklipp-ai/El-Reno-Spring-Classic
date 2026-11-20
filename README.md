@@ -64,6 +64,14 @@ The default is `elreno`. You can change it in the admin under **Settings**. The 
 4. Replace `published-data.js` in this folder with the downloaded file.
 5. Commit and push. Render redeploys automatically.
 
+## Officials and pay
+
+The Officials tab has an Arbiter number column. Type the number the Arbiter Sports assigning app gave each game, or paste a whole list into the import box and click Assign in schedule order. A pasted line can be the number alone, or the number plus the two officials separated by commas or tabs.
+
+Below that is Individual official pay sheets. Set the pay per game, default $50, and the tab lists every official it found in the Official 1 and Official 2 columns with their match count, their Arbiter numbers, and their money total. Print sheet gives that one person a single page with their matches, the Arbiter numbers, and the total due. Print all official sheets puts every official on their own page in one print job.
+
+Name matching is by exact spelling, ignoring case and extra spaces. If you type Jane Smith on one game and J. Smith on another, they become two sheets, so keep the spelling consistent.
+
 ## Printouts
 
 Every printout is sized for letter paper. The board grid prints landscape, and the team and field lists print portrait. Use the print buttons on the public page or in the admin Print tab.

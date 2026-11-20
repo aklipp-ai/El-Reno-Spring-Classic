@@ -456,3 +456,40 @@ table.p-grid .pg-empty{background:#fbfbfd}
 @media screen{
   table.p-grid{font-family:inherit}
 }
+
+/* ---------- individual official pay sheets ---------- */
+.off-pay-list{margin-top:14px}
+table.off-pay-table{width:100%;border-collapse:collapse;font-size:13px}
+table.off-pay-table th{
+  text-align:left;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);font-weight:700;padding:7px 9px;border-bottom:1px solid var(--line-2);
+}
+table.off-pay-table td{padding:8px 9px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.off-pay-table tr:last-child td{border-bottom:0}
+table.off-pay-table .op-name{font-weight:700;color:var(--ink)}
+table.off-pay-table .op-c{width:70px;color:var(--muted)}
+table.off-pay-table .op-r{text-align:right;white-space:nowrap}
+table.off-pay-table .op-nums{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:12px;color:var(--accent);
+}
+table.off-pay-table .op-warn{font-family:inherit;color:var(--amber);font-style:italic}
+
+@media print{
+  .p-sheet{page-break-inside:avoid;break-inside:avoid}
+  .p-break{page-break-before:always;break-before:page}
+  .p-off-name{
+    font-size:15pt;font-weight:800;color:#262161;margin:0 0 10pt;
+    padding-bottom:5pt;border-bottom:1pt solid #ccd6e0;
+  }
+  table.p-sum{width:52%;margin:14pt 0 0 auto;border-collapse:collapse;font-size:10.5pt}
+  table.p-sum td{padding:5pt 8pt;border-bottom:.6pt solid #ccd6e0}
+  table.p-sum .p-sum-v{text-align:right;font-weight:700;white-space:nowrap}
+  table.p-sum tr.p-sum-total td{
+    border-top:1.6pt solid #262161;border-bottom:0;
+    font-size:12.5pt;font-weight:800;color:#262161;padding-top:7pt;
+  }
+  .p-sign{margin-top:26pt;width:60%}
+  .p-sign-line{border-bottom:.8pt solid #555;height:22pt}
+  .p-sign-lbl{font-size:8.5pt;color:#666;margin-top:4pt}
+}
